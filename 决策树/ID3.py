@@ -117,8 +117,6 @@ class DTree:
             sub_tree = self.train(sub_train_df)
             node_tree.add_node(f, sub_tree)
         return node_tree
-        # 昨天截至到这里,今天从这里开始
-        exit(0)
 
     def fit(self, x_train, y_train):
         train_data = pd.concat([x_train, y_train], axis=1)
