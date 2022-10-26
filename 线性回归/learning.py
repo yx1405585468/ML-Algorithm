@@ -45,4 +45,25 @@ if __name__ == '__main__':
     ax.plot(x, y_true, 'o', label='data')  # 原始数据
     ax.plot(x, y_pre, 'r--.', label='test')  # 拟合数据
     ax.legend(loc='best')
+    # plt.show()
+
+    # 11. 高阶回归
+    # Y=5+2⋅X+3⋅X^2
+    n_sample = 200
+    x = np.linspace(0, 10, n_sample)
+    X = np.column_stack((x, x ** 2))
+    X = sm.add_constant(X)
+    beta = np.array([5, 2, 3])
+    e = np.random.normal(size=n_sample)
+    y = np.dot(X, beta) + e
+    model = sm.OLS(y, X)
+    results = model.fit()
+    print(results.params)
+
+    # 12. 高阶回归可视化
+    y_fitted = results.fittedvalues
+    fig, ax = plt.subplots(figsize=(8, 6))
+    ax.plot(x, y, 'o', label='data')
+    ax.plot(x, y_fitted, 'r--.', label='OLS')
+    ax.legend(loc='best')
     plt.show()
