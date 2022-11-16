@@ -7,7 +7,6 @@ from .generate_polynomials import generate_polynomials
 
 
 def prepare_for_training(data, polynomial_degree=0, sinusoid_degree=0, normalize_data=True):
-
     # 计算样本总数
     num_examples = data.shape[0]
 

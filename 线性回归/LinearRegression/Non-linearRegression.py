@@ -14,11 +14,11 @@ data.head(10)
 plt.plot(x, y)
 plt.show()
 
-num_iterations = 50000  
-learning_rate = 0.02  
-polynomial_degree = 15  
-sinusoid_degree = 15  
-normalize_data = True  
+num_iterations = 50000
+learning_rate = 0.02
+polynomial_degree = 15
+sinusoid_degree = 15
+normalize_data = True
 
 linear_regression = LinearRegression(x, y, polynomial_degree, sinusoid_degree, normalize_data)
 
@@ -31,7 +31,6 @@ print('开始损失: {:.2f}'.format(cost_history[0]))
 print('结束损失: {:.2f}'.format(cost_history[-1]))
 
 theta_table = pd.DataFrame({'Model Parameters': theta.flatten()})
-
 
 plt.plot(range(num_iterations), cost_history)
 plt.xlabel('Iterations')
