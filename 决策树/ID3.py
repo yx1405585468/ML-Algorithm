@@ -141,4 +141,4 @@ if __name__ == '__main__':
 
     # 预测数据
     result = dt.predict(x)
-    print(result)
+    print(result.value_counts())
