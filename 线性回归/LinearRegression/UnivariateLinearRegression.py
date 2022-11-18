@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from linear_regression import LinearRegression
+from 线性回归.LinearRegression.Linear_Regression.linear_regression import LinearRegression
 
 data = pd.read_csv('../data/world-happiness-report-2017.csv')
 

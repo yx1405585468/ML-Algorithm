@@ -5,7 +5,7 @@ import plotly
 import plotly.graph_objs as go
 
 plotly.offline.init_notebook_mode()
-from linear_regression import LinearRegression
+from 线性回归.LinearRegression.Linear_Regression.linear_regression import LinearRegression
 
 data = pd.read_csv('../data/world-happiness-report-2017.csv')
 

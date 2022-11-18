@@ -1,4 +1,6 @@
 import numpy as np
+import pandas as pd
+from sklearn.datasets import load_boston
 
 from 线性回归.utils.features import prepare_for_training
 
@@ -11,17 +13,10 @@ class LinearRegression:
         2.先得到所有的特征个数
         3.初始化参数矩阵
         """
-        (data_processed,
-         features_mean,
-         features_deviation) = prepare_for_training(data, polynomial_degree, sinusoid_degree, normalize_data=True)
+        data = prepare_for_training(data, polynomial_degree, sinusoid_degree, normalize_data=True)[0]
 
-        self.data = data_processed
+        self.data = data
         self.labels = labels
-        self.features_mean = features_mean
-        self.features_deviation = features_deviation
-        self.polynomial_degree = polynomial_degree
-        self.sinusoid_degree = sinusoid_degree
-        self.normalize_data = normalize_data
 
         num_features = self.data.shape[1]
         self.theta = np.zeros((num_features, 1))
@@ -81,12 +76,17 @@ class LinearRegression:
         """
                     用训练的参数模型，与预测得到回归值结果
         """
-        data_processed = prepare_for_training(data,
-                                              self.polynomial_degree,
-                                              self.sinusoid_degree,
-                                              self.normalize_data
-                                              )[0]
+        data = prepare_for_training(data)[0]
 
-        predictions = LinearRegression.hypothesis(data_processed, self.theta)
+        predictions = LinearRegression.hypothesis(data, self.theta)
 
         return predictions
+
+
+if __name__ == '__main__':
+    boston = load_boston()
+    x = pd.DataFrame(data=boston.data, columns=boston.feature_names)
+    y = pd.DataFrame(data=boston.target, columns=["labels"])
+    linear = LinearRegression(x, y)
+    linear.train(alpha=0.01)
+    print(linear.predict(x))
