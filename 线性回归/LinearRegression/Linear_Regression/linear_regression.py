@@ -13,10 +13,17 @@ class LinearRegression:
         2.先得到所有的特征个数
         3.初始化参数矩阵
         """
-        data = prepare_for_training(data, polynomial_degree, sinusoid_degree, normalize_data=True)[0]
+        (data_processed,
+         features_mean,
+         features_deviation) = prepare_for_training(data, polynomial_degree, sinusoid_degree, normalize_data=True)
 
-        self.data = data
+        self.data = data_processed
         self.labels = labels
+        self.features_mean = features_mean
+        self.features_deviation = features_deviation
+        self.polynomial_degree = polynomial_degree
+        self.sinusoid_degree = sinusoid_degree
+        self.normalize_data = normalize_data
 
         num_features = self.data.shape[1]
         self.theta = np.zeros((num_features, 1))
@@ -76,17 +83,25 @@ class LinearRegression:
         """
                     用训练的参数模型，与预测得到回归值结果
         """
-        data = prepare_for_training(data)[0]
+        data_processed = prepare_for_training(data,
+                                              self.polynomial_degree,
+                                              self.sinusoid_degree,
+                                              self.normalize_data
+                                              )[0]
 
-        predictions = LinearRegression.hypothesis(data, self.theta)
+        predictions = LinearRegression.hypothesis(data_processed, self.theta)
 
         return predictions
 
 
 if __name__ == '__main__':
+    # 1. 原始数据集
     boston = load_boston()
     x = pd.DataFrame(data=boston.data, columns=boston.feature_names)
     y = pd.DataFrame(data=boston.target, columns=["labels"])
+
+    # 2. 训练
     linear = LinearRegression(x, y)
     linear.train(alpha=0.01)
-    print(linear.predict(x))
+    pre_result = linear.predict(x)
+    print(pre_result)
