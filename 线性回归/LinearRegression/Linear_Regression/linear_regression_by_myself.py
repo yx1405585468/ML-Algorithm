@@ -1,5 +1,3 @@
-import time
-
 import numpy as np
 import pandas as pd
 from sklearn.datasets import load_boston
@@ -34,7 +32,7 @@ class LinearRegression:
         """
         # 1. 赋值数据集和标签
 
-        self.data = pd.DataFrame(prepare_for_training(data)[0])  # 为数据构造线性回归方程时，添加一列1作为参数0，也就是截距
+        self.data = data
         self.label = label
 
         # 2. 赋值矩阵参数和特征列数
@@ -50,7 +48,6 @@ class LinearRegression:
         """
                 定义predict模块
         """
-        data = pd.DataFrame(prepare_for_training(data)[0])  # 标准化并添加一列全为1.以作截距参数
         prediction = self.predict_inner(data)
         return prediction
 
@@ -89,8 +86,13 @@ if __name__ == '__main__':
     x = pd.DataFrame(data=boston.data, columns=boston.feature_names)
     y = pd.DataFrame(data=boston.target, columns=["labels"])
 
-    # 2. 训练
+    # 2. 预处理，标准化，并且加一列1
+    x = pd.DataFrame(prepare_for_training(x)[0])  # 为数据构造线性回归方程时，添加一列1作为参数0，也就是截距
+
+    # 3. 训练
     linear = LinearRegression(alpha=0.01, num_iterations=500)
     linear.fit(x, y)
+
+    # 4. 预测
     pre_result = linear.predict(x)
     print(pre_result)
