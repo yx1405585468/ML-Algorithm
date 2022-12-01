@@ -5,7 +5,6 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler, PolynomialFeatures
 
 if __name__ == '__main__':
-    from sklearn.linear_model import Ridge
 
     np.random.seed(42)
     m = 20

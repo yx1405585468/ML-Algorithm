@@ -6,13 +6,13 @@ from sklearn.linear_model import Ridge
 
 
 # 随机梯度下降：定义不同时间的学习率，时间越靠后，学习率越小，刚开始，学习率较大
-def learning_schedule_sgd(t_):
+def learning_schedule_sgd(t_):  # 随机梯度下降的学习率更新
     t0 = 5
     t1 = 50
     return t0 / (t1 + t_)
 
 
-def learning_schedule_minibatch(t_):
+def learning_schedule_minibatch(t_):  # 小批量梯度下降的学习率更新
     t0, t1 = 200, 1000
     return t0 / (t_ + t1)
 
@@ -32,7 +32,7 @@ if __name__ == '__main__':
     y_predict = x_new_1.dot(theta_best)
     print("最小二乘法求解的参数预测结果：\n", y_predict)
 
-    # TODO 3.不同梯度下降策略造成的影响
+    # TODO 3.不同梯度下降策略
 
     # TODO 3.1 批量梯度下降
     theta_path_bgd = []
@@ -67,7 +67,6 @@ if __name__ == '__main__':
             theta_path_sgd.append(theta)  # 记录梯度更新的前行路径
     plt.plot(x, y, "b.")
     plt.axis([0, 2, 0, 15])
-    # plt.show()
 
     # TODO 3.2 MiniBatch梯度下降
     theta_path_mgd = []
@@ -99,11 +98,8 @@ if __name__ == '__main__':
     plt.plot(theta_path_bgd[:, 0], theta_path_bgd[:, 1], 'b-o', linewidth=3, label='BGD')
     plt.legend(loc='upper left')
     plt.axis([3.5, 4.5, 2.0, 4.0])
-    # plt.show()
+    plt.show()
 
     # TODO 5 正则化解决过拟合
-    m = 20
-    x = 3 * np.random.rand(m, 1)
-    y = 0.5 * x + np.random.rand(m, 1) / 1.5 + 1
-    plt.plot(x, y)
-    plt.show()
+    # 岭回归
+    # lasso回归
