@@ -1,5 +1,5 @@
 from matplotlib import pyplot as plt
-from sklearn.linear_model import Ridge
+from sklearn.linear_model import Ridge, Lasso
 import numpy as np
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler, PolynomialFeatures
@@ -30,7 +30,7 @@ if __name__ == '__main__':
 
     plt.figure(figsize=(14, 6))
     plt.subplot(121)
-    plot_model(Ridge, polynomial=False, alphas=(0, 10, 100))
+    plot_model(Ridge, polynomial=False, alphas=(0, 10, 100))  # Ridge | Lasso
     plt.subplot(122)
-    plot_model(Ridge, polynomial=True, alphas=(0, 10, 100))
+    plot_model(Ridge, polynomial=True, alphas=(0, 10, 100))  # Ridge | Lasso
     plt.show()
