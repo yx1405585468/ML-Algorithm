@@ -1,5 +1,6 @@
 import numpy as np
 from scipy.optimize import minimize
+from sklearn.datasets import load_iris
 
 from 逻辑回归.utils.features import prepare_for_training
 from 逻辑回归.utils.hypothesis import sigmoid
@@ -48,21 +49,22 @@ class LogisticRegression:
         num_features = data.shape[1]
         result = minimize(
             # 要优化的目标：
-            # lambda current_theta:LogisticRegression.cost_function(data,labels,current_initial_theta.reshape(num_features,1)),
             lambda current_theta: LogisticRegression.cost_function(data, labels,
                                                                    current_theta.reshape(num_features, 1)),
             # 初始化的权重参数
             current_initial_theta,
+
             # 选择优化策略
             method='CG',
+
             # 梯度下降迭代计算公式
-            # jac = lambda current_theta:LogisticRegression.gradient_step(data,labels,current_initial_theta.reshape(num_features,1)),
             jac=lambda current_theta: LogisticRegression.gradient_step(data, labels,
                                                                        current_theta.reshape(num_features, 1)),
             # 记录结果
             callback=lambda current_theta: cost_history.append(
                 LogisticRegression.cost_function(data, labels, current_theta.reshape((num_features, 1)))),
-            # 迭代次数  
+
+            # 迭代次数
             options={'maxiter': max_iterations}
         )
         if not result.success:
@@ -71,18 +73,18 @@ class LogisticRegression:
         return optimized_theta, cost_history
 
     @staticmethod
-    def cost_function(data, labels, theat):
+    def cost_function(data, labels, theta):
         num_examples = data.shape[0]
-        predictions = LogisticRegression.hypothesis(data, theat)
+        predictions = LogisticRegression.hypothesis(data, theta)
         y_is_set_cost = np.dot(labels[labels == 1].T, np.log(predictions[labels == 1]))
         y_is_not_set_cost = np.dot(1 - labels[labels == 0].T, np.log(1 - predictions[labels == 0]))
         cost = (-1 / num_examples) * (y_is_set_cost + y_is_not_set_cost)
         return cost
 
     @staticmethod
-    def hypothesis(data, theat):
+    def hypothesis(data, theta):
 
-        predictions = sigmoid(np.dot(data, theat))
+        predictions = sigmoid(np.dot(data, theta))
 
         return predictions
 
@@ -105,3 +107,14 @@ class LogisticRegression:
         for index, label in enumerate(self.unique_labels):
             class_prediction[max_prob_index == index] = label
         return class_prediction.reshape((num_examples, 1))
+
+
+if __name__ == '__main__':
+    # 1. 制造数据
+    data = load_iris().data
+    label = load_iris().target.reshape(len(data), 1)
+
+    # 2.训练预测
+    lgr = LogisticRegression(data, label)
+    lgr.train()
+    print(lgr.predict(data))
