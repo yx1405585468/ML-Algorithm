@@ -145,4 +145,3 @@ if __name__ == '__main__':
     config = get_jira_config()
     jira = get_jira(config)
     set_jira_worklogs(jira, config)
-    # get_jira_worklogs(jira, config)

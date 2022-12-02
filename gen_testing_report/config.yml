@@ -10,6 +10,6 @@ Jira:
     # issue 关键字
     issue_key: 'IAIMPCPH-55'
     # 开始日期
-    start_date: '2022-11-05'
+    start_date: '2022-11-01'
     # 结束日期
     end_date: '2022-11-30'
