@@ -1,0 +1,96 @@
+Jira:
+  # Jira 地址
+  url: 'http://jira.oa.ikasinfo.com/'
+  # 用户名
+  username: 'xu.jianguo'
+  # 密码
+  password: 'xxxx'
+  # 搜索条件
+  search:
+    # JQL 语句
+    jql: 'project = XDMES AND issuetype in (Improvement, Bug) AND status in (开启, 进行中, 重新开启, 挂起) AND created >= 2021-09-30 AND assignee in (currentUser()) ORDER BY priority DESC, updated DESC'
+     # 关键字
+    key: ['XDMES-1703']
+    # 项目
+    project: 'XDMES'
+    # 创建者
+    creator: ['wang.peizhang']
+    # 报告人
+    reporter: ['shi.wei']
+    # 经办人
+    assignee: ['wang.peizhang']
+    # 影响版本
+    affectedVersion: ['3.2.2',]
+    # 优先级
+    priority: ['Highest', 'High', 'Medium', 'Low', 'Lowest']
+    # 状态：开启, 进行中, 重新开启, Resolved, 关闭, 已验证, 已解决, 拒绝, 挂起
+    status: ['Resolved', '已验证', '已解决']
+    # 解决结果
+    resolution: ['Fixed', 'Done']
+    # 问题类型
+    issuetype: ['Task', 'New Feature', 'Sub-task']
+    # 排序，默认正序，- 反序
+    order: ['-key', 'affectedVersion']
+  # 工时
+  tempo:
+    # issue 关键字
+    issue_key: 'ZCMOCVD1-3'
+    # 开始日期
+    start_date: '2022-08-01'
+    # 结束日期
+    end_date: '2022-08-31'
+
+IKAS:
+  # 提测申请
+  title: '【转测申请】信达灏天项目'
+  # 项目迭代版本
+  version: 'testing分支 commit hash: 8a7243aaa3e'
+  # 单元测试是否通过
+  pass_unit_testing: '无'
+  # 集成测试是否通过
+  pass_integration_testing: '无'
+  # 功能自测是否通过
+  pass_self_testing: '通过'
+  # 测试地址
+  testing_url: 'http://192.168.11.89:8003/#/login?redirect=%2Fhome'
+  # 接口文档地址
+  document_url: 'http://192.168.11.55:3000/project/36/interface/api'
+  # jenkins构建地址
+  jenkins_url: 'http://jenkins.ikasinfo.com/view/%E4%BF%A1%E8%BE%BE%E7%81%8F%E5%A4%A9MES/job/xinda-ht-dev-pipline/'
+  # 项目总负责人
+  project_leader: ''
+  # 项目成员
+  project_members:
+    # 项目经理
+    project_manager: '王星澎、陈宪'
+    # 产品经理
+    product_manager: '石威、黄雪萍'
+    # 前端
+    frontend: '邱彬、张德森、陈林'
+    # 后端
+    backend: '徐建国、张旭毅、黄超、盛天毫'
+    # 算法
+    algorithm: '无'
+    # 测试
+    testing: '黄嘉乐、丁甲满、许世杰'
+  # 备注
+  remark: ''
+
+
+Email:
+  # 邮箱服务器地址和端口
+  server: ["smtp.mxhichina.com", 465]
+  # 授权
+  auth: ['username', 'password']
+  # 主题
+  subject: '测试提测邮件'
+  # 发件人
+  f: 'wang.peizhang@ikasinfo.com'
+  # 收件人
+  to: ['xu.jianguo@ikasinfo.com']
+  # 抄送人
+  cc: ['zhang.xuyi@ikasinfo.com']
+  # 附件，文件路径
+  attachments: [
+    './ikas_testing.html'
+  ]
