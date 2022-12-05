@@ -43,7 +43,7 @@ class LogisticRegression:
             current_label = np.array((self.label == label).astype(float)).reshape(-1, 1)
 
             # 对当前二分类执行梯度下降，求当前二分类算法最终参数，
-            current_theta = self.gradient_step(current_label, current_theta)
+            current_theta, cost = self.gradient_step(current_label, current_theta)
 
             # 将当前二分类参数
             self.theta[index] = current_theta.T
@@ -54,8 +54,18 @@ class LogisticRegression:
             error = prediction - current_label  # 计算错误标签
             gradient = (1 / self.num_data) * np.dot(self.data.T, error)  # 计算梯度
             current_theta = current_theta - self.alpha * gradient  # 迭代更新参数
+            cost = self.cost_function(current_label, current_theta)
+            print(cost)
 
-        return current_theta
+        return current_theta, cost
+
+    def cost_function(self, current_label, current_theta):
+
+        predictions = sigmoid(np.dot(self.data, current_theta))
+        y_is_set_cost = np.dot(current_label[current_label == 1].T, np.log(predictions[current_label == 1]))
+        y_is_not_set_cost = np.dot(1 - current_label[current_label == 0].T, np.log(1 - predictions[current_label == 0]))
+        cost = (-1 / self.num_data) * (y_is_set_cost + y_is_not_set_cost)
+        return cost
 
     def predict(self, data):
         num_data = data.shape[0]

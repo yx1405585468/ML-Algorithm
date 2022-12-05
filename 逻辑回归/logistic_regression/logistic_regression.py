@@ -36,8 +36,8 @@ class LogisticRegression:
         num_features = self.data.shape[1]
         for label_index, unique_label in enumerate(self.unique_labels):
             current_initial_theta = np.copy(self.theta[label_index].reshape(num_features, 1))
-            current_lables = (self.labels == unique_label).astype(float)
-            (current_theta, cost_history) = LogisticRegression.gradient_descent(self.data, current_lables,
+            current_labels = (self.labels == unique_label).astype(float)
+            (current_theta, cost_history) = LogisticRegression.gradient_descent(self.data, current_labels,
                                                                                 current_initial_theta, max_iterations)
             self.theta[label_index] = current_theta.T
             cost_histories.append(cost_history)
