@@ -47,7 +47,6 @@ class LogisticRegression:
 
             # 将当前二分类参数
             self.theta[index] = current_theta.T
-        print(self.theta)
 
     def gradient_step(self, current_label, current_theta):
         for i in range(self.num_iterations):
@@ -62,10 +61,14 @@ class LogisticRegression:
         num_data = data.shape[0]
         data_processed = prepare_for_training(data, polynomial_degree=0, sinusoid_degree=0, normalize_data=False)[0]
         prob = sigmoid(np.dot(data_processed, self.theta.T))
-        max_prob_index = np.argmax(prob, axis=1)
-        class_prediction = np.empty(max_prob_index.shape, dtype=object)
+        # print(prob)  # 预测出的结果分别是三类中每一类的概率
+        # [[9.94278388e-01 1.32253688e-01 1.17526077e-06]
+        #  [9.84413654e-01 2.48847537e-01 4.58543908e-06]
+        #  [9.90857054e-01 1.62324192e-01 3.52917292e-06]]
+        max_prob_index = np.argmax(prob, axis=1)  # 找到概率最大的一列的索引
+        class_prediction = np.empty(max_prob_index.shape, dtype=object)  # 根据索引的shape制造一列列表
         for index, label in enumerate(self.label_unique):
-            class_prediction[max_prob_index == index] = label
+            class_prediction[max_prob_index == index] = label  # 以预测索引对应label的索引，进而匹配出预测的标签label
         return class_prediction.reshape((num_data, 1))
 
 
