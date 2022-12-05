@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.optimize import minimize
 from sklearn.datasets import load_iris
+from sklearn.metrics import accuracy_score
 
 from 逻辑回归.utils.features import prepare_for_training
 from 逻辑回归.utils.hypothesis import sigmoid
@@ -41,6 +42,7 @@ class LogisticRegression:
             self.theta[label_index] = current_theta.T
             cost_histories.append(cost_history)
 
+        print(self.theta)
         return self.theta, cost_histories
 
     @staticmethod
@@ -117,4 +119,5 @@ if __name__ == '__main__':
     # 2.训练预测
     lgr = LogisticRegression(data, label)
     lgr.train()
-    print(lgr.predict(data))
+    result = lgr.predict(data).reshape(1, -1)[0].tolist()
+    print("准确率", accuracy_score(label.tolist(), result))
