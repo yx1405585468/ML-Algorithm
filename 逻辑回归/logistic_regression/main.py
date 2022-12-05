@@ -6,7 +6,7 @@ import numpy as np
 
 
 class LogisticRegression:
-    def __init__(self, alpha=0.01, num_iterations=1000):
+    def __init__(self, alpha=0.1, num_iterations=1000):
         self.data = None
         self.label = None
         self.label_unique = None
