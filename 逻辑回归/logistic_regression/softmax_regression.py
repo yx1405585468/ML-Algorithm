@@ -52,6 +52,8 @@ def train(data_arr, label_arr, n_class, iters=1000, alpha=0.1, lam=0.01):
     @return: theta 参数
     '''
     n_samples, n_features = data_arr.shape
+    print(n_samples)
+    print(n_features)
     n_classes = n_class
     # 随机初始化权重矩阵
     weights = np.random.rand(n_class, n_features)
@@ -98,6 +100,7 @@ def myfun():
     data_arr, label_arr = load_dataset('../data/train_dataset.txt')
     data_arr = np.array(data_arr)
     label_arr = np.array(label_arr).reshape((-1, 1))
+
     weights, all_loss = train(data_arr, label_arr, n_class=4)
 
     # 计算预测的准确率
@@ -110,12 +113,12 @@ def myfun():
     print(accuray)
 
     # 绘制损失函数
-    fig = plt.figure(figsize=(8, 5))
+    plt.figure(figsize=(8, 5))
     plt.plot(np.arange(1000), all_loss)
     plt.title("Development of loss during training")
     plt.xlabel("Number of iterations")
     plt.ylabel("Loss")
-    plt.show()
+    # plt.show()
 
 
 def softmax_lib():
