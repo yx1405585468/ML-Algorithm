@@ -42,13 +42,18 @@ class SoftmaxRegression:
             loss = -(1.0 / self.n_samples) * np.sum(y_one_hot * np.log(prediction))
             all_loss.append(loss)
 
-            # 最小化损失函数，求解梯度，这里在数据上需要推理
+            # 最小化损失函数，求解梯度，这里在数据上需要推理,这里加上了正则项：+ self.lam * self.theta
+            # #加入正则项之后的梯度
             dw = -(1.0 / self.n_samples) * np.dot((y_one_hot - prediction).T, x) + self.lam * self.theta
             dw[:, 0] = dw[:, 0] - self.lam * self.theta[:, 0]
 
             # 更新权重参数
             self.theta = self.theta - self.alpha * dw
         return self.theta, all_loss
+
+    def predict(self, data):
+        prediction = self.softmax(np.dot(data, self.theta.T))
+        return np.argmax(prediction, axis=1).reshape((-1, 1))
 
     @staticmethod
     def one_hot(y, n_samples, n_classes):
@@ -65,8 +70,11 @@ class SoftmaxRegression:
 
 
 if __name__ == '__main__':
-    data = pd.read_csv("../data/train_data.csv")
-    x_ = np.array(data.iloc[:, :-1])
-    y_ = np.array(data.iloc[:, -1]).reshape(-1, 1)
+    data_ = pd.read_csv("../data/train_data.csv")
+    x_ = np.array(data_.iloc[:, :-1])
+    y_ = np.array(data_.iloc[:, -1]).reshape(-1, 1)
     sg = SoftmaxRegression()
     sg.fit(x_, y_)
+    y_prediction = sg.predict(x_)
+    accuracy = np.sum(y_prediction == y_) / len(y_)
+    print(accuracy)
