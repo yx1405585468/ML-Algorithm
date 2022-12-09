@@ -52,8 +52,6 @@ def train(data_arr, label_arr, n_class, iters=1000, alpha=0.1, lam=0.01):
     @return: theta 参数
     '''
     n_samples, n_features = data_arr.shape
-    print(n_samples)
-    print(n_features)
     n_classes = n_class
     # 随机初始化权重矩阵
     weights = np.random.rand(n_class, n_features)
