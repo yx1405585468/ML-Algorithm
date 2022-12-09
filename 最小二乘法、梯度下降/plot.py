@@ -29,12 +29,12 @@ def plot_gradient_descent(theta, eta, theta_path=None):
 
 if __name__ == '__main__':
     theta_path_bgd = []
-    theta = np.random.randn(2, 1)
+    theta_ = np.random.randn(2, 1)
     plt.figure(figsize=(10, 4))
     plt.subplot(131)
-    plot_gradient_descent(theta, eta=0.02)
+    plot_gradient_descent(theta_, eta=0.02)
     plt.subplot(132)
-    plot_gradient_descent(theta, eta=0.1, theta_path=theta_path_bgd)
+    plot_gradient_descent(theta_, eta=0.1, theta_path=theta_path_bgd)
     plt.subplot(133)
-    plot_gradient_descent(theta, eta=0.5)
+    plot_gradient_descent(theta_, eta=0.5)
     plt.show()

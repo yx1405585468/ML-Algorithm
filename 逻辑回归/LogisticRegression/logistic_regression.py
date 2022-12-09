@@ -113,11 +113,11 @@ class LogisticRegression:
 
 if __name__ == '__main__':
     # 1. 制造数据
-    data = load_iris().data
-    label = load_iris().target.reshape(len(data), 1)
+    data_ = load_iris().data
+    label_ = load_iris().target.reshape(len(data_), 1)
 
     # 2.训练预测
-    lgr = LogisticRegression(data, label)
+    lgr = LogisticRegression(data_, label_)
     lgr.train()
-    result = lgr.predict(data).reshape(1, -1)[0].tolist()
-    print("准确率", accuracy_score(label.tolist(), result))
+    prediction = lgr.predict(data_).reshape(1, -1)[0].tolist()
+    print("准确率", accuracy_score(label_.tolist(), prediction))

@@ -1,8 +1,8 @@
-import time
-
+"""
+    线性回归的梯度最小二乘法求解，以及梯度下降策略
+"""
 import numpy as np
 from matplotlib import pyplot as plt
-from sklearn.linear_model import Ridge
 
 
 # 随机梯度下降：定义不同时间的学习率，时间越靠后，学习率越小，刚开始，学习率较大

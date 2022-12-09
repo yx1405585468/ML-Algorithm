@@ -21,9 +21,9 @@ if __name__ == '__main__':
                                   ('StandardScaler', StandardScaler()),
                                   ('lin_reg', model)])
             model.fit(X, y)
-            y_new_regul = model.predict(X_new)
+            y_new_reg = model.predict(X_new)
             lw = 2 if alpha > 0 else 1
-            plt.plot(X_new, y_new_regul, style, linewidth=lw, label='alpha = {}'.format(alpha))
+            plt.plot(X_new, y_new_reg, style, linewidth=lw, label='alpha = {}'.format(alpha))
         plt.plot(X, y, 'b.', linewidth=3)
         plt.legend()
 
