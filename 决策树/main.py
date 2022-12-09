@@ -23,12 +23,12 @@ class DecisionTree:
 
     def fit(self, data, label):
         fea_list = list(range(data.shape[1]))  # 生成特征列数列表[0, 1, 2, 3]
-        self.tree = self.buildTree(fea_list, data, label)  # 根据数据集构建决策树
+        self.tree = self.build_tree(fea_list, data, label)  # 根据数据集构建决策树
 
     def predict(self, data):
         pass
 
-    def buildTree(self, fea_list, data, label):
+    def build_tree(self, fea_list, data, label):
         # 构建递归树
         label_unique = np.unique(label)  # 输出数据集的几种类别
 
