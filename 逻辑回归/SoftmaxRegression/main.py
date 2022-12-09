@@ -74,11 +74,17 @@ class SoftmaxRegression:
 
 
 if __name__ == '__main__':
+    # 1. 训练集
     data_ = pd.read_csv("../data/train_data.csv")
     x_ = np.array(data_.iloc[:, :-1])
     y_ = np.array(data_.iloc[:, -1]).reshape(-1, 1)
     sg = SoftmaxRegression()
     sg.fit(x_, y_)
+
+    # 2. 测试集
+    data_ = pd.read_csv("../data/test_data.csv")
+    x_ = np.array(data_.iloc[:, :-1])
+    y_ = np.array(data_.iloc[:, -1]).reshape(-1, 1)
     y_prediction = sg.predict(x_)
     accuracy = np.sum(y_prediction == y_) / len(y_)
     print(accuracy)
