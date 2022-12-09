@@ -44,6 +44,7 @@ class SoftmaxRegression:
 
             # 最小化损失函数，求解梯度，这里在数据上需要推理,这里加上了正则项：+ self.lam * self.theta
             # #加入正则项之后的梯度
+            # TODO : The most important step !!!
             dw = -(1.0 / self.n_samples) * np.dot((y_one_hot - prediction).T, x) + self.lam * self.theta
             dw[:, 0] = dw[:, 0] - self.lam * self.theta[:, 0]
 
