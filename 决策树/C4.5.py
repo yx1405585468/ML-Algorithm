@@ -1,5 +1,7 @@
+"""
+    ID3、C4.5决策树
+"""
 import math
-import time
 from collections import defaultdict, Counter
 
 import numpy as np
@@ -17,8 +19,8 @@ class Node:
 
 class DecisionTree:
     def __init__(self, epsilon=1e-3, metric='C4.5'):
-        self.epsilon = epsilon
         self.tree = None
+        self.epsilon = epsilon
         self.metric = metric
 
     def fit(self, data, label):
