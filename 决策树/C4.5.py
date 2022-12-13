@@ -1,12 +1,10 @@
-"""
-ID3&C4.5决策树算法
-"""
 import math
-from collections import Counter, defaultdict
+import time
+from collections import defaultdict, Counter
 
+import numpy as np
 import pandas as pd
 from sklearn.datasets import load_iris
-import numpy as np
 
 
 class Node:
@@ -23,102 +21,110 @@ class DecisionTree:
         self.tree = None
         self.metric = metric
 
-    def exp_ent(self, y_data):
-        # 计算经验熵
-        c = Counter(y_data)  # 统计各个类标记的个数
-        ent = 0
-        N = len(y_data)
-        for val in c.values():
-            p = val / N
-            ent += -p * math.log2(p)
-        return ent
+    def fit(self, data, label):
+        fea_list = list(range(data.shape[1]))
+        self.tree = self.build_tree(fea_list, data, label)
+        return self.tree
 
-    def con_ent(self, fea, X_data, y_data):
-        # 计算条件熵并返回，同时返回切分后的各个子数据集
-        fea_val_unique = Counter(X_data[:, fea])
-        subdata_inds = defaultdict(list)  # 根据特征fea下的值切分数据集
-        for ind, sample in enumerate(X_data):
-            subdata_inds[sample[fea]].append(ind)  # 挑选某个值对应的所有样本点的索引
+    def predict(self, data):
+        data = pd.DataFrame(data)
+        result = data.apply(lambda x: self.predict_inner(x), axis=1)
+        return result
 
-        ent = 0
-        N = len(y_data)
-        for key, val in fea_val_unique.items():
-            pi = val / N
-            ent += pi * self.exp_ent(y_data[subdata_inds[key]])
-        return ent, subdata_inds
-
-    def infoGain(self, fea, X_data, y_data):
-        # 计算信息增益
-        exp_ent = self.exp_ent(y_data)
-        con_ent, subdata_inds = self.con_ent(fea, X_data, y_data)
-        return exp_ent - con_ent, subdata_inds
-
-    def infoGainRatio(self, fea, X_data, y_data):
-        # 计算信息增益比
-        g, subdata_inds = self.infoGain(fea, X_data, y_data)
-        N = len(y_data)
-        split_info = 0
-        for val in subdata_inds.values():
-            p = len(val) / N
-            split_info -= p * math.log2(p)
-        return g / split_info, subdata_inds
-
-    def bestfea(self, fea_list, X_data, y_data):
-        # 获取最优切分特征、相应的信息增益（比）以及切分后的子数据集
-        score_func = self.infoGainRatio
-        if self.metric == 'ID3':
-            score_func = self.infoGain
-        bestfea = fea_list[0]  # 初始化最优特征
-        gmax, bestsubdata_inds = score_func(bestfea, X_data, y_data)  # 初始化最大信息增益及切分后的子数据集
-        for fea in fea_list[1:]:
-            g, subdata_inds = score_func(fea, X_data, y_data)
-            if g > gmax:
-                bestfea = fea
-                bestsubdata_inds = subdata_inds
-                gmax = g
-        return gmax, bestfea, bestsubdata_inds
-
-    def buildTree(self, fea_list, X_data, y_data):
-        # 递归构建树
-        label_unique = np.unique(y_data)
-        if label_unique.shape[0] == 1:  # 数据集只有一个类，直接返回该类
-            return Node(res=label_unique[0])
-        if not fea_list:
-            return Node(res=Counter(y_data).most_common(1)[0][0])
-        gmax, bestfea, bestsubdata_inds = self.bestfea(fea_list, X_data, y_data)
-        if gmax < self.epsilon:  # 信息增益比小于阈值，返回数据集中出现最多的类
-            return Node(res=Counter(y_data).most_common(1)[0][0])
-        else:
-            fea_list.remove(bestfea)
-            child = {}
-            for key, val in bestsubdata_inds.items():
-                child[key] = self.buildTree(fea_list, X_data[val], y_data[val])
-            return Node(fea=bestfea, child=child)
-
-    def fit(self, X_data, y_data):
-        fea_list = list(range(X_data.shape[1]))
-        self.tree = self.buildTree(fea_list, X_data, y_data)
-        return
-
-    def predict(self, X):
-        def helper(X, tree):
-            if tree.res is not None:  # 表明到达叶节点
+    def predict_inner(self, data):
+        def helper(data_, tree):
+            if tree.res is not None:  # 表明到达叶子节点
                 return tree.res
             else:
                 try:
-                    sub_tree = tree.child[X[tree.fea]]
-                    return helper(X, sub_tree)  # 根据对应特征下的值返回相应的子树
-                except:
-                    print('input data is out of scope')
+                    sub_tree = tree.child[data_[tree.fea]]
+                    return helper(data_, sub_tree)
+                except Exception as e:
+                    print("输入数据超出维度")
 
-        return helper(X, self.tree)
+        return helper(data, self.tree)
+
+    @staticmethod
+    def calculate_empirical_entropy(label):  # 计算整体经验熵
+        c = pd.DataFrame(label).value_counts().tolist()
+        n = len(label)
+        ent = 0
+        for val in c:
+            p = val / n
+            ent += -p * math.log2(p)
+        return ent
+
+    def calculate_condition_entropy(self, fea, data, label):
+        # 根据特征fea拆分子集
+        sub_data = defaultdict(list)  # 初始化一个内容为列表的字典
+        for index, sample in enumerate(data):
+            sub_data[sample[fea]].append(index)  # 将fea列中数值相同的行index汇集在一起
+
+        # 计算条件熵
+        c = Counter(data[:, fea])
+        ent = 0
+        n = len(label)
+        for key, val in c.items():
+            pi = val / n
+            # label[sub_data[key]]：key对应的子集集合的index序号，label[序号]可以找到子集对应的标签
+            # 注意：此处与上面多对应的都是字典，方便用key对应关联
+            ent = ent + pi * self.calculate_empirical_entropy(label[sub_data[key]])  # 计算每一个子集的经验熵并求和
+        return ent, sub_data
+
+    def info_gain(self, fea, data, label):
+        # 计算信息增益,用于ID3算法
+        exp_ent = self.calculate_empirical_entropy(label)
+        con_ent, sub_data = self.calculate_condition_entropy(fea, data, label)
+        return exp_ent - con_ent, sub_data
+
+    def info_gain_radio(self, fea, data, label):
+        # 计算信息增益比，用于C4.5
+        info_add, sub_data = self.info_gain(fea, data, label)
+        n = len(label)
+        split_radio = 0
+        for val in sub_data.values():
+            p = len(val) / n  # 每一个子集数据量占总体数据的占比
+            # 以下是划分子集的占比所计算的熵，而不是整体熵的label标签的占比
+            split_radio -= p * math.log2(p)
+        return info_add / split_radio, sub_data
+
+    def best_feature(self, fea_list, data, label):
+        # 获取最优切分特征，相应的信息增益比以及切分后的子数据集
+        score_func = self.info_gain_radio
+        if self.metric == "ID3":
+            score_func = self.info_gain
+
+        best_fea = fea_list[0]  # 选择首个，将剩下的分别再计算信息增益，与首个对比，计算出最优切分特征
+        g_max, best_sub_data = score_func(best_fea, data, label)
+        for fea in fea_list[1:]:
+            g, sub_data = score_func(fea, data, label)
+            if g > g_max:
+                best_fea = fea
+                best_sub_data = sub_data
+                g_max = g
+        return g_max, best_fea, best_sub_data
+
+    def build_tree(self, fea_list, data, label):  # 重点
+        label_unique = np.unique(label)
+        if label_unique.shape[0] == 1:  # 只剩下一个标签了 那就是你了
+            return Node(res=label_unique[0])  # label_unique[0]=0|1|2
+        if not fea_list:
+            return Node(res=Counter(label).most_common(1)[0][0])
+        g_max, best_fea, best_sub_data = self.best_feature(fea_list, data, label)  # 找出最好的特征以及子集
+        if g_max < self.epsilon:  # 信息增益小于阈值，返回数据集中的占大部分的类
+            return Node(res=Counter(label).most_common(1)[0][0])
+        else:
+            fea_list.remove(best_fea)
+            child = {}
+            for key, val in best_sub_data.items():
+                child[key] = self.build_tree(fea_list, data[val], label[val])
+            return Node(fea=best_fea, child=child)
 
 
 if __name__ == '__main__':
     x_ = load_iris().data
     y_ = load_iris().target
+
     clf = DecisionTree()
     clf.fit(x_, y_)
-    x_ = pd.DataFrame(x_)
-    prediction = x_.apply(lambda x: clf.predict(x), axis=1)
-    print(prediction)
+    print(clf.predict(x_))
