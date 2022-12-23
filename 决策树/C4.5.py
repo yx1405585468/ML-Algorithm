@@ -115,6 +115,8 @@ class DecisionTree:
         g_max, best_fea, best_sub_data = self.best_feature(fea_list, data, label)  # 找出最好的特征以及子集
         if g_max < self.epsilon:  # 信息增益小于阈值，返回数据集中的占大部分的类
             return Node(res=Counter(label).most_common(1)[0][0])
+
+        # TODO  此处else指的是尚处于分支，上面三个return才是最终返回的结果，下面的分支也是为了输出上面的结果
         else:
             fea_list.remove(best_fea)
             child = {}
