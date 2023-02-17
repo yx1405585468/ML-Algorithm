@@ -1,18 +1,22 @@
-import math
+import matplotlib
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_digits
+from sklearn.ensemble import RandomForestClassifier
 
-import numpy as np
+
+def plot_digit(data):
+    image = data.reshape(8, 8)
+    plt.imshow(image, cmap=matplotlib.cm.hot)
+    plt.axis('off')
+
 
 if __name__ == '__main__':
-    D = 4
-    L = 4
-    n_fea = int(math.log2(D) + 1)  # 默认选择特征的个数
-    print(n_fea)
-    fea_arr = np.zeros((n_fea, D))
-    for i in range(n_fea):
-        out_fea = np.random.choice(D, L, replace=False)
-        print(out_fea)
-        coeff = np.random.uniform(-1, 1, D)  # 在[-1,1]上的均匀分布来产生每个特征前的系数
-        coeff[out_fea] = 0
-        fea_arr[i] = coeff
+    mnist = load_digits()
+    rfc = RandomForestClassifier(n_estimators=500, n_jobs=-1)
+    rfc.fit(mnist['data'], mnist['target'])
+    print(rfc.feature_importances_.shape)
 
-    print(fea_arr)
+    plot_digit(rfc.feature_importances_)
+    char = plt.colorbar(ticks=[rfc.feature_importances_.min(), rfc.feature_importances_.max()])
+    char.ax.set_yticklabels(["Not important", "Very important"])
+    plt.show()
