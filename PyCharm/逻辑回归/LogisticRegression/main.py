@@ -1,6 +1,6 @@
 from sklearn.datasets import load_iris
-from 逻辑回归.utils.features import prepare_for_training
-from 逻辑回归.utils.hypothesis import sigmoid
+from ..utils.features import prepare_for_training
+from ..utils.hypothesis import sigmoid
 from sklearn.metrics import accuracy_score
 import numpy as np
 
