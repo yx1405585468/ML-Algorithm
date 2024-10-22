@@ -21,3 +21,19 @@ def plot_sigmoid():
     plt.grid(True)
     plt.legend()
     plt.show()
+
+def plot_softmax():
+    def softmax(x):
+        e_x = np.exp(x - np.max(x))
+        return e_x / e_x.sum()
+
+    x = np.linspace(-2, 2, 100)
+    y = softmax(x)
+
+    plt.figure(figsize=(8, 6))
+    plt.plot(x, y)
+    plt.title('Softmax Function')
+    plt.xlabel('Input Value')
+    plt.ylabel('Output Probability')
+    plt.grid(True)
+    plt.show()
